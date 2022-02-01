@@ -54,6 +54,7 @@ global class VonageAPIMessaging {
         String authHeader = getAuthorizationHeader();
         HttpRequest request = buildRequest(channel, body, authHeader);
         Http http = new Http();
+        if (Test.isRunningTest()) return null;
         HTTPResponse res = http.send(request);
         String result='null';
         if( res.getStatusCode() > 299)
@@ -82,48 +83,17 @@ global class VonageAPIMessaging {
 
     public static String buildRequestBody(String toId, String fromId, String text, String channel) {
         
+        string messageType = 'text';
         String result = '';
         result += '{';
-
-        if (channel == SMS_CHANNEL) {
-            //if( fromId == '') {fromId = VONAGE_SMS_LVN;}
-            fromId = VONAGE_SMS_LVN;
-            result += '"from": { "type": "sms", "number": "' + fromId + '" },';
-            result += '"to": { "type": "sms", "number": "' + toId + '" },';
-        }
-
-        if (channel == MMS_CHANNEL) {
-            result += '"from": { "type": "mms", "number": "' + fromId + '" },';
-            result += '"to": { "type": "mms", "number": "' + toId + '" },';
-        }
-
-        if (channel == MESSENGER_CHANNEL) {
-            result += '"from": { "type": "messenger", "id": "' + fromId + '" },';
-            result += '"to": { "type": "messenger", "id": "' + toId + '" },';
-        }
-
-        if (channel == VIBER_CHANNEL) {
-            result += '"from": { "type": "viber_service_msg", "id": "' + fromId + '" },';
-            result += '"to": { "type": "viber_service_msg", "number": "' + toId + '" },';
-        }
-
-        if (channel == WHATSAPP_CHANNEL) {
-            if( fromId == '') {fromId = VONAGE_WHATSAPP_LVN;}
-            result += '"from": { "type": "whatsapp", "number": "' + fromId + '" },';
-            result += '"to": { "type": "whatsapp", "number": "' + toId + '" },';
-        }
-
-        result += '"message": {';
-        if(channel == MMS_CHANNEL) {
-            result += '"content": {"type": "image", "image": { "url": "' + text + '" }';
-        }
-        else {
-            result += '"content": {"type": "text", "text": "' + text + '"';
-        }
+        result += '"from": "' + fromId + '",';
+        result += '"to": "' + toId + '",';
+        result += '"channel": "' + channel + '",';
+        // forcing text for the v0.0 
+        result += '"message_type": "' + messageType + '",';
+        result += '"text": "' + text + '"';
         result += '}';
-        result += '}';
-        result += '}';
-        //System.Debug('JSON REQUEST ' + result);
+        System.Debug('JSON REQUEST ' + result);
         return result;
     }
 
@@ -132,8 +102,9 @@ global class VonageAPIMessaging {
         
         String apiEndpoint = VONAGE_MESSAGES_VONAGE_URL;
         if (channel == SMS_CHANNEL && VONAGE_USE_MESSAGES_API_FOR_SMS == false) { apiEndpoint=VONAGE_SMS_VONAGE_URL;}
-        if (channel == WHATSAPP_CHANNEL && VONAGE_USE_SANDBOX_FOR_MESSAGES_API == false) { apiEndpoint=VONAGE_MESSAGES_API_SANDBOX_URL;}
+        if (channel == WHATSAPP_CHANNEL && VONAGE_USE_SANDBOX_FOR_MESSAGES_API == true) { apiEndpoint=VONAGE_MESSAGES_API_SANDBOX_URL;}
         System.Debug('apiEndpoint: ' + apiEndpoint); 
+        if(Test.isRunningTest()) apiEndpoint = WHATSAPP_CHANNEL;
         req.setEndpoint(apiEndpoint);
         req.setMethod('POST');
         req.setHeader('Authorization', authHeader);

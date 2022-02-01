@@ -3,6 +3,7 @@
     <fullName>VonageMessaging</fullName>
     <description>Vonage Messaging</description>
     <types>
+        <members>TestClass</members>
         <members>VonageAPIMessaging</members>
         <members>VonageMessaging</members>
         <name>ApexClass</name>
