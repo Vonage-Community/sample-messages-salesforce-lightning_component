@@ -4,6 +4,9 @@
 In this repository, you will find the Lightning component UI for Salesforce connector that will allow you to add 2 way WhatsApp Chat straight into Salesforce using Vonage API. It works with the Vonage Messages API to Salesforce connector that can be found here : 
 https://github.com/Vonage-Community/sample-messages-salesforce-nodejsconnector
 
+here is a quicklink that will install the package
+install the unmanaged package link https://login.salesforce.com/packaging/installPackage.apexp?p0=04t2o000000TPHs
+
 # Creating the Vonage API account:
 Vonage is a leading global CPaaS player that offers B2C communication channels over API. These include SMS and WhatsApp! If you already have an account, you can login here : https://dashboard.nexmo.com/ and follow the instructions. If you don't have an account, you can create one in less than 1 minute and start sending SMS, WhatsApp immediately : https://dashboard.nexmo.com/sign-up
 
